@@ -15,48 +15,70 @@ items.push(new Item('Conjured Mana Cake', 3, 6));
 
 function update_quality() {
   for (var i = 0; i < items.length; i++) {
-    if (items[i].name != 'Aged Brie' && items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-      if (items[i].quality > 0) {
-        if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-          items[i].quality = items[i].quality - 1
-        }
-      }
+    var item = items[i];
+    
+    if (item.name === 'Sulfuras, Hand of Ragnaros') {
+      continue;
+    }
+    
+    if (item.name === 'Aged Brie') {
+      updateAgedBrie(item);
+    } else if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
+      updateBackstagePasses(item);
+    } else if (isConjured(item)) {
+      updateConjuredItem(item);
     } else {
-      if (items[i].quality < 50) {
-        items[i].quality = items[i].quality + 1
-        if (items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-          if (items[i].sell_in < 11) {
-            if (items[i].quality < 50) {
-              items[i].quality = items[i].quality + 1
-            }
-          }
-          if (items[i].sell_in < 6) {
-            if (items[i].quality < 50) {
-              items[i].quality = items[i].quality + 1
-            }
-          }
-        }
-      }
+      updateNormalItem(item);
     }
-    if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-      items[i].sell_in = items[i].sell_in - 1;
-    }
-    if (items[i].sell_in < 0) {
-      if (items[i].name != 'Aged Brie') {
-        if (items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-          if (items[i].quality > 0) {
-            if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-              items[i].quality = items[i].quality - 1
-            }
-          }
-        } else {
-          items[i].quality = items[i].quality - items[i].quality
-        }
-      } else {
-        if (items[i].quality < 50) {
-          items[i].quality = items[i].quality + 1
-        }
-      }
-    }
+    
+    item.sell_in = item.sell_in - 1;
+  }
+}
+
+function isConjured(item) {
+  return item.name.indexOf('Conjured') === 0;
+}
+
+function increaseQuality(item, amount) {
+  item.quality = Math.min(50, item.quality + amount);
+}
+
+function decreaseQuality(item, amount) {
+  item.quality = Math.max(0, item.quality - amount);
+}
+
+function updateAgedBrie(item) {
+  if (item.sell_in > 0) {
+    increaseQuality(item, 1);
+  } else {
+    increaseQuality(item, 2);
+  }
+}
+
+function updateBackstagePasses(item) {
+  if (item.sell_in <= 0) {
+    item.quality = 0;
+  } else if (item.sell_in <= 5) {
+    increaseQuality(item, 3);
+  } else if (item.sell_in <= 10) {
+    increaseQuality(item, 2);
+  } else {
+    increaseQuality(item, 1);
+  }
+}
+
+function updateNormalItem(item) {
+  if (item.sell_in > 0) {
+    decreaseQuality(item, 1);
+  } else {
+    decreaseQuality(item, 2);
+  }
+}
+
+function updateConjuredItem(item) {
+  if (item.sell_in > 0) {
+    decreaseQuality(item, 2);
+  } else {
+    decreaseQuality(item, 4);
   }
 }
