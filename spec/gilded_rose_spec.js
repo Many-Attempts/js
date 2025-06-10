@@ -89,6 +89,83 @@ describe("Gilded Rose", function() {
       expect(items[0].quality).toEqual(80);
     });
   });
+  
+  describe("Backstage Passes", function() {
+    
+    it("should increase quality by 1 when sell_in is more than 10", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(14);
+      expect(items[0].quality).toEqual(21);
+    });
 
+    it("should increase quality by 1 when sell_in is exactly 11", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 11, 20)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(10);
+      expect(items[0].quality).toEqual(21);
+    });
+
+    it("should increase quality by 2 when sell_in is 10", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 10, 20)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(9);
+      expect(items[0].quality).toEqual(22);
+    });
+
+    it("should increase quality by 2 when sell_in is between 6 and 10", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 8, 20)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(7);
+      expect(items[0].quality).toEqual(22);
+    });
+
+    it("should increase quality by 2 when sell_in is exactly 6", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 6, 20)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(5);
+      expect(items[0].quality).toEqual(22);
+    });
+
+    it("should increase quality by 3 when sell_in is 5", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 5, 20)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(4);
+      expect(items[0].quality).toEqual(23);
+    });
+
+    it("should increase quality by 3 when sell_in is between 1 and 5", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 3, 20)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(2);
+      expect(items[0].quality).toEqual(23);
+    });
+
+    it("should increase quality by 3 when sell_in is exactly 1", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 1, 20)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(0);
+      expect(items[0].quality).toEqual(23);
+    });
+
+    it("should drop quality to 0 after the concert", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 0, 20)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(-1);
+      expect(items[0].quality).toEqual(0);
+    });
+
+    it("should never have quality greater than 50", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 5, 49)];
+      update_quality();
+      expect(items[0].quality).toEqual(50);
+    });
+
+    it("should handle quality cap when increasing by 2", function() {
+      items = [new Item("Backstage passes to a TAFKAL80ETC concert", 10, 49)];
+      update_quality();
+      expect(items[0].quality).toEqual(50);
+    });
+  });
 
 });
