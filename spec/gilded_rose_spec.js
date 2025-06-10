@@ -167,5 +167,21 @@ describe("Gilded Rose", function() {
       expect(items[0].quality).toEqual(50);
     });
   });
+  describe("Conjured Items", function() {
+    
+    it("should decrease quality by 1 for conjured items (current behavior)", function() {
+      items = [new Item("Conjured Mana Cake", 5, 10)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(4);
+      expect(items[0].quality).toEqual(9);
+    });
 
+    it("should decrease quality by 2 when sell_in date has passed", function() {
+      items = [new Item("Conjured Mana Cake", 0, 10)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(-1);
+      expect(items[0].quality).toEqual(8);
+    });
+  });
+  
 });
