@@ -169,17 +169,37 @@ describe("Gilded Rose", function() {
   });
   describe("Conjured Items", function() {
     
-    it("should decrease quality by 1 for conjured items (current behavior)", function() {
+    
+    it("should decrease quality by 2 for conjured items (twice as fast as normal)", function() {
       items = [new Item("Conjured Mana Cake", 5, 10)];
       update_quality();
       expect(items[0].sell_in).toEqual(4);
-      expect(items[0].quality).toEqual(9);
+      expect(items[0].quality).toEqual(8);
     });
 
-    it("should decrease quality by 2 when sell_in date has passed", function() {
+    it("should decrease quality by 4 when sell_in date has passed (twice as fast as normal)", function() {
       items = [new Item("Conjured Mana Cake", 0, 10)];
       update_quality();
       expect(items[0].sell_in).toEqual(-1);
+      expect(items[0].quality).toEqual(6);
+    });
+
+    it("should never have negative quality", function() {
+      items = [new Item("Conjured Mana Cake", 5, 1)];
+      update_quality();
+      expect(items[0].quality).toEqual(0);
+    });
+
+    it("should never have negative quality even when sell_in has passed", function() {
+      items = [new Item("Conjured Mana Cake", -1, 3)];
+      update_quality();
+      expect(items[0].quality).toEqual(0);
+    });
+
+    it("should work with any item name starting with 'Conjured'", function() {
+      items = [new Item("Conjured Healing Potion", 5, 10)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(4);
       expect(items[0].quality).toEqual(8);
     });
   });
