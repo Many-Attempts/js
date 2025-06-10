@@ -38,4 +38,34 @@ describe("Gilded Rose", function() {
     });
   });
 
+  describe("Aged Brie", function() {
+    
+    it("should increase quality as it ages", function() {
+      items = [new Item("Aged Brie", 5, 10)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(4);
+      expect(items[0].quality).toEqual(11);
+    });
+
+    it("should increase quality by 2 when sell_in date has passed", function() {
+      items = [new Item("Aged Brie", 0, 10)];
+      update_quality();
+      expect(items[0].sell_in).toEqual(-1);
+      expect(items[0].quality).toEqual(12);
+    });
+
+    it("should never have quality greater than 50", function() {
+      items = [new Item("Aged Brie", 5, 50)];
+      update_quality();
+      expect(items[0].quality).toEqual(50);
+    });
+
+    it("should never have quality greater than 50 even when sell_in has passed", function() {
+      items = [new Item("Aged Brie", -1, 49)];
+      update_quality();
+      expect(items[0].quality).toEqual(50);
+    });
+  });
+
+
 });
